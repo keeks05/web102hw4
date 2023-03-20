@@ -2,6 +2,7 @@ import axios from 'axios';
 import { useState, useEffect } from 'react'
 import BreedAttr from '../Components/BreedAttr'
 import BanList from './../Components/BanList'
+import Gallery from '../Components/Gallery';
 import './App.css'
 
 const ACCESS_KEY ='live_pN2nXsOhx97s5xgo8VslTyQQuB3RNO0XvlEIsKqlq1KcsEGdwmvAN7pNNpRS88tV';
@@ -13,24 +14,29 @@ function App() {
    const [breeds, setBreeds] = useState(null);
    const [showDog, setShow] = useState(false);
    const [banList, setBanList] = useState([]);
-
+   const [prevDogs, setPrevDogs] = useState([])
 
    const fetchData = async () => {
       const response = await axios.get(URL);
-      setDogs(response.data[0])
-      setBreeds(response.data[0].breeds[0])
+      setDogs(response.data[0]);
+      setPrevDogs((dogimg) => [...dogimg, response.data[0].url])
+      setBreeds(response.data[0].breeds[0]);
       setShow(true);
-
    }
 
    const handleClick = () => {
       fetchData();
+      // console.log(banList.includes(breeds.name))
+      // console.log(banList)
+         // const found = banList.some(r=> breeds.name.includes(r) >=0)
+         // while (found !== 0 ) {
+         //    // Generate another query until every attribute is not included in the ban list
+         // }
    }
 
    const handleNameClick = () => {
       let attribute = breeds.name;
       setBanList(banList => [...banList, attribute])
-
    }
    const handleLifeClick = () => {
       let attribute = breeds.life_span;
@@ -47,8 +53,11 @@ function App() {
       setBanList(banList => [...banList, attribute])
 
    }
+
+   // {breeds.name && console.log(breeds.name)}
    return (
       <div className="main-container">
+         <Gallery dogs={prevDogs} />
          <div className="container">
             <h1>Doggie dogee doge dog</h1>
             <h3>Discover dogs from around the world!</h3>
